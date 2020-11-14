@@ -38,8 +38,9 @@ def welcome():
         f"Available Routes:<br/>"
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
-        f"/api/v1.0/<start>"
-        f"/api/v1.0/<start>/<end>"
+        f"/api/v1.0/tobs<br/>"
+        f"/api/v1.0/<start><br/>"
+        f"/api/v1.0/<start>/<end><br/>"
     )
 
 @app.route("/api/v1.0/precipitation")
@@ -99,9 +100,10 @@ def tobs():
     #return the list jsonified
     return jsonify(tobs_all)
 
-@app.route("/api/v1.0/<start>")
-@app.route("/api/v1.0/<start>/<end>")
-def name(start = None, end=None):
+# @app.route("/api/v1.0/<start>")
+# @app.route("/api/v1.0/<start>/<end>")
+# def name(start = None, end=None):
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
