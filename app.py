@@ -51,7 +51,7 @@ def precipitation():
     session = Session(engine)
 
     #query for the date and precipitation
-    weather = session.query(Measurement.date, Measurement.prcp).all()
+    weather = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= '2017-08-20').all()
 
     #close out the session
     session.close
