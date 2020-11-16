@@ -20,6 +20,7 @@ Base.prepare(engine, reflect=True)
 # Save reference to the table
 Measurement = Base.classes.measurement
 Station = Base.classes.station
+#session = Session(engine)
 
 #################################################
 # Flask Setup
@@ -39,8 +40,8 @@ def welcome():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start><br/>"
-        f"/api/v1.0/<start>/<end><br/>"
+        f"/api/v1.0//api/v1.0/start/08-20-2017<br/>"
+        f"/api/v1.0/start&end/2017-08-20/2017-08-23<br/>"
     )
 
 @app.route("/api/v1.0/precipitation")
@@ -100,10 +101,50 @@ def tobs():
     #return the list jsonified
     return jsonify(tobs_all)
 
-# @app.route("/api/v1.0/<start>")
-# @app.route("/api/v1.0/<start>/<end>")
-# def name(start = None, end=None):
-    
+@app.route("/api/v1.0/start/<start>")
+@app.route("/api/v1.0/start&end/<start>/<end>")
+def name(start = None, end=None):
+    #create the search variables
+    start_date = str(start)
+    end_date = str(end)
+
+    #create a session link
+    session = Session(engine)
+
+    #query for the date and precipitation
+    # if end_date == None:
+    #     maxTemp = session.query(func.max(Measurement.tobs)).\
+    #         filter(Measurement.station == 'USC00519281').filter(Measurement.date <= start_date).scalar()
+    #     minTemp = session.query(func.min(Measurement.tobs)).\
+    #         filter(Measurement.station == 'USC00519281').filter(Measurement.date <= start_date).scalar()
+    #     avgTemp = session.query(func.avg(Measurement.tobs)).\
+    #         filter(Measurement.station == 'USC00519281').filter(Measurement.date <= start_date).scalar()
+    # else:
+    maxTemp = session.query(func.max(Measurement.tobs)).\
+    filter(Measurement.station == 'USC00519281').\
+    filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).scalar()
+    minTemp = session.query(func.min(Measurement.tobs)).\
+    filter(Measurement.station == 'USC00519281').\
+    filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).scalar()
+    avgTemp = session.query(func.avg(Measurement.tobs)).\
+    filter(Measurement.station == 'USC00519281').\
+    filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).scalar()
+
+    #close out the session
+    session.close
+
+    #create a dictionary
+    weather_date = []
+    weather_dict = {}
+    weather_dict["Start_Date"] = start_date
+    weather_dict["End_Date"] = end_date
+    weather_dict["Avg_Temp"] = avgTemp
+    weather_dict["Max_Temp"] = maxTemp
+    weather_dict["Min_Temp"] = minTemp
+    weather_date.append(weather_dict)
+
+    return jsonify(weather_date)
 
 if __name__ == '__main__':
     app.run(debug=True)
+    #session.close
