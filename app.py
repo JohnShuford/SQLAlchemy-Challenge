@@ -41,7 +41,7 @@ def welcome():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0//api/v1.0/start/2017-08-15<br/>"
+        f"/api/v1.0/start/2017-08-15<br/>"
         f"/api/v1.0/start&end/2017-08-20/2017-08-23<br/>"
     )
 
@@ -124,15 +124,12 @@ def route(start = None):
     weather_date = []
     weather_dict = {}
     weather_dict["Start_Date"] = start_date
-    weather_dict["End_Date"] = end_date
-    weather_dict["Avg_Temp"] = avgTemp
+    weather_dict["Avg_Temp"] = round(avgTemp,2)
     weather_dict["Max_Temp"] = maxTemp
     weather_dict["Min_Temp"] = minTemp
     weather_date.append(weather_dict)
 
     return jsonify(weather_date)
-
-
 
 @app.route("/api/v1.0/start&end/<start>/<end>")
 def name(start = None, end=None):
@@ -167,7 +164,7 @@ def name(start = None, end=None):
     weather_dict = {}
     weather_dict["Start_Date"] = start_date
     weather_dict["End_Date"] = end_date
-    weather_dict["Avg_Temp"] = avgTemp
+    weather_dict["Avg_Temp"] = round(avgTemp,2)
     weather_dict["Max_Temp"] = maxTemp
     weather_dict["Min_Temp"] = minTemp
     weather_date.append(weather_dict)
